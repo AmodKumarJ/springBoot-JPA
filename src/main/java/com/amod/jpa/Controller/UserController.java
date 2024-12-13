@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -34,7 +35,7 @@ public class UserController {
 
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> userDetail(@PathVariable int id) {
-        Optional<User> user = service.getUserById(id);
+        Optional<User> user = service.findUserById(id);
         if (user.isPresent()) {
             return ResponseEntity.ok(user);
         } else {
@@ -88,9 +89,19 @@ public class UserController {
                     .body("Error saving user and tasks: " + e.getMessage());
         }
     }
-    @PostMapping("/task/{u_id}")
-    public void createTask(@PathVariable int u_id, Tasks task){
-        service.CreateTask(task);
+    @PostMapping("/task/{id}")
+    public ResponseEntity<?> createTask(@PathVariable int id,@RequestBody Map<String, String> payload){
+        try{
+            User user = service.getUserById(id);
+            Tasks tasks = new Tasks();
+            tasks.setUser(user);
+            tasks.setTask_name((String) payload.get("task_name"));
+            tasks.setDescription((String) payload.get("description"));
+            service.CreateTask(tasks);
+            ResponseEntity.ok("Task created successfully");
+        }catch (Exception e){
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
+        }
     }
 
 }

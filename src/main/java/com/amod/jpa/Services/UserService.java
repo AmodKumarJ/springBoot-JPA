@@ -20,8 +20,8 @@ public class UserService {
     public void save(User user){
         userRepo.save(user);
     }
-    public Optional<User> getUserById(int id){
-        return userRepo.findById(id);
+    public User getUserById(int id){
+        return userRepo.getById(id);
     }
     public List<User> getAllUsers(){
         return userRepo.findAll();
@@ -46,6 +46,9 @@ public class UserService {
     @Transactional
     public void CreateTask(Tasks task){
         taskRepo.save(task);
+    }
+    public Optional<User> findUserById(int id){
+        return userRepo.findById(id);
     }
 
 
