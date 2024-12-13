@@ -1,9 +1,6 @@
 package com.amod.jpa.Model;
 import jakarta.persistence.*;
-
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -22,8 +19,16 @@ public class User {
     @Column
     private String email;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Tasks> task = new ArrayList<>();
+   @OneToMany(mappedBy = "user")
+   private Set<Tasks>tasks;
+
+    public Set<Tasks> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Tasks> tasks) {
+        this.tasks = tasks;
+    }
 
     public int getUser_id() {
         return user_id;
@@ -57,18 +62,7 @@ public class User {
         this.email = email;
     }
 
-    public List<Tasks> getTask() {
-        return task;
-    }
-
-    public void setTask(List<Tasks> task) {
-        this.task = task;
-    }
-
-    public void setTasks(List<Tasks> tasks) {
-        this.task = tasks;
-        for (Tasks tas : task) {
-            tas.setUser(this);
-        }
-    }
 }
+
+
+

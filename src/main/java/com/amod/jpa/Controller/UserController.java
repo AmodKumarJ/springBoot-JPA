@@ -6,11 +6,12 @@ import com.amod.jpa.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+
 import java.util.Optional;
 
 @RestController
@@ -77,13 +78,6 @@ public class UserController {
     @PostMapping("/tasks")
     public ResponseEntity<?> userWithTask(@RequestBody User user) {
         try {
-            // Ensure tasks are properly associated
-            if (user.getTask() != null) {
-                for (Tasks task : user.getTask()) {
-                    task.setUser(user);
-                }
-            }
-
             // Save the user and tasks
             service.addUserWithTask(user);
 
@@ -93,6 +87,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error saving user and tasks: " + e.getMessage());
         }
+    }
+    @PostMapping("/task/{u_id}")
+    public void createTask(@PathVariable int u_id, Tasks task){
+        service.CreateTask(task);
     }
 
 }

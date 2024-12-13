@@ -2,6 +2,7 @@ package com.amod.jpa.Services;
 
 import com.amod.jpa.Model.Tasks;
 import com.amod.jpa.Model.User;
+import com.amod.jpa.Repository.TaskRepo;
 import com.amod.jpa.Repository.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    @Autowired
+    TaskRepo taskRepo;
     @Autowired
     UserRepo userRepo;
     public void save(User user){
@@ -33,15 +36,17 @@ public class UserService {
         return userRepo.findByEmailEndsWith(domain);
     }
     @Transactional
-    public User addUserWithTask(User user) {
-        // Ensure tasks are associated with the user
-        if (user.getTask() != null) {
-            for (Tasks task : user.getTask()) {
-                task.setUser(user);
-            }
+    public void addUserWithTask(User user) {
+        userRepo.save(user);
+        for(Tasks task : user.getTasks()){
+            task.setUser(user);
+            taskRepo.save(task);
         }
-
-        // Save and return the user
-        return userRepo.save(user);
     }
+    @Transactional
+    public void CreateTask(Tasks task){
+        taskRepo.save(task);
+    }
+
+
 }
