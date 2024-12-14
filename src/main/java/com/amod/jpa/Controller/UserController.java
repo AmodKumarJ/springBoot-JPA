@@ -102,6 +102,7 @@ public class UserController {
         }catch (Exception e){
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
+        return null;
     }
 
 }
